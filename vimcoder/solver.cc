@@ -1,0 +1,7 @@
+struct $CLASSNAME$
+{
+  $RETURNTYPE$ $METHODNAME$($METHODPARAMS$)
+  {
+    
+  }
+};
