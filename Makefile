@@ -17,3 +17,7 @@ vimcoder:
 
 clean:
 	rm -rf dist
+
+.DEFAULT:
+	rm -rf dist/$@
+	cp -r dist/universal dist/$@
