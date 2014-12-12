@@ -6,8 +6,7 @@ using factor_t = std::map<long long, int>;
 factor_t factorize(long long x)
 {
   factor_t factor;
-  if (x <= 1) return factor;
-  for (int i = 2; x > 1 && i <= ceil(sqrt(x)); i++) {
+  for (int i = 2; x > 1 && i <= floor(sqrt(x)); i++) {
     while (x % i == 0) {
       x /= i;
       factor[i] += 1;
