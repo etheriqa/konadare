@@ -1,0 +1,6 @@
+language: cpp
+compiler:
+    - g++
+    - clang++
+install: ./setup.sh
+script: make test
