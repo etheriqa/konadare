@@ -10,6 +10,9 @@
 
 using namespace std;
 
+using ll = long long;
+using ld = long double;
+
 template <class Key>          using uset = unordered_set<Key>;
 template <class Key, class T> using umap = unordered_map<Key, T>;
 
