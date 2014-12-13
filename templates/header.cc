@@ -4,7 +4,9 @@
 
 #define inf(T) (numeric_limits<T>::min())
 #define sup(T) (numeric_limits<T>::max())
-#define range(c) (c).begin(), (c).end()
+#define rep(i,n) for (int i = 0; i < (n); i++)
+#define asc(c) (c).begin(), (c).end()
+#define desc(c) (c).rbegin(), (c).rend()
 #define mp(...) make_pair(__VA_ARGS__)
 #define mt(...) make_tuple(__VA_ARGS__)
 
