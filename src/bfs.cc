@@ -4,10 +4,8 @@
 #include <vector>
 
 template <class V>
-void bfs(
-  V s,
-  std::function<std::vector<V>(V)> adjs
-) {
+void bfs(V s, std::function<std::vector<V>(V)> adjs)
+{
   std::queue<V> q;
   std::set<V> visited;
   for (q.push(s); !q.empty(); q.pop()) {
