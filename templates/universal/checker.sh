@@ -6,8 +6,8 @@ check_all()
 {
     executable=$1
 
-    for input in $(find . -name 'input*' -mindepth 1 -maxdepth 1); do
-        check "$executable" "${input#*input*}"
+    for input in $(find . -name 'in*' -mindepth 1 -maxdepth 1); do
+        check "$executable" "${in#*in*}"
     done
 }
 
@@ -15,8 +15,8 @@ check()
 {
     executable=$1
     case=$2
-    input="input${case}"
-    output="output${case}"
+    input="in${case}"
+    output="out${case}"
 
     set +e
     diff=$(diff -u ${output} <(timeout 10 $executable ${input} < ${input}))
