@@ -7,7 +7,7 @@ check_all()
     executable=$1
 
     for input in $(find . -name 'in*' -mindepth 1 -maxdepth 1); do
-        check "$executable" "${in#*in*}"
+        check "$executable" "${input#*in*}"
     done
 }
 
