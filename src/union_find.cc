@@ -1,10 +1,10 @@
-#include <unordered_map>
+#include <map>
 #include <utility>
 
 template <class Key>
 class UnionFind
 {
-  std::unordered_map<Key, std::pair<Key, size_t>> uf;
+  std::map<Key, std::pair<Key, size_t>> uf;
 public:
   void insert(const Key& x)
   {
