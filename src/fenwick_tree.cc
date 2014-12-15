@@ -14,7 +14,7 @@ public:
   }
   Arithmetic prefix(size_t n)
   {
-    Arithmetic p = Arithmetic();
+    Arithmetic p = decltype(p)();
     for (size_t pos = n - 1; pos < ft.size(); pos = ((pos + 1) & pos) - 1) {
       p += ft[pos];
     }
