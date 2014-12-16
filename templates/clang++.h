@@ -13,8 +13,10 @@
 #include <limits>
 #include <list>
 #include <map>
+#include <memory>
 #include <numeric>
 #include <queue>
+#include <random>
 #include <set>
 #include <stack>
 #include <string>
