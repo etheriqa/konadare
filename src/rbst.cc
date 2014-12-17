@@ -9,81 +9,75 @@ template <class Key, class Value>
 class RBST
 {
   struct Node;
-  using NodePtr = std::shared_ptr<Node>;
+  using NodePtr     = std::shared_ptr<Node>;
   using NodePtrPair = std::pair<NodePtr, NodePtr>;
-  using Compare = std::function<bool(Key, Key)>;
+  using Compare     = std::function<bool(Key, Key)>;
   struct Node
   {
-    size_t size_;
-    Key key_;
-    Value value_;
-    NodePtr left_;
-    NodePtr right_;
-    Node(Key k, Value v)
-      : size_(1),
-        key_(k),
-        value_(v) {}
-    Node(const Node& t)
-      : size_(t.size_),
-        key_(t.key_),
-        value_(t.value_),
-        left_(t.left_),
-        right_(t.right_) {}
-    static size_t size(const NodePtr& t)
-    {
-      return t ? t->size_ : 0;
-    }
-    static NodePtr copy(const NodePtr& t)
-    {
-      return t ? std::make_shared<Node>(*t) : t;
-    }
+    size_t s;
+    Key k;
+    Value v;
+    NodePtr l;
+    NodePtr r;
+    Node(Key k, Value v): s(1), k(k), v(v), l(nullptr), r(nullptr) {}
+    Node(const Node& t): s(t.s), k(t.k), v(t.v), l(t.l), r(t.r) {}
+    Key key() { return k; }
+    Value value() { return v; }
+    static size_t size(const NodePtr& t) { return t ? t->s : 0; }
     static const NodePtr& update(const NodePtr& t)
     {
       if (!t) return t;
-      t->size_ = 1 + size(t->left_) + size(t->right_);
+      t->s = 1 + size(t->l) + size(t->r);
+      return t;
+    }
+    static const NodePtr& propagate(const NodePtr& t)
+    {
+      if (!t) return t;
+      if (t->l) {
+        t->l = std::make_shared<Node>(*(t->l));
+        update(t->l);
+      }
+      if (t->r) {
+        t->r = std::make_shared<Node>(*(t->r));
+        update(t->r);
+      }
       return t;
     }
     static NodePtr merge(const NodePtr& l, const NodePtr& r)
     {
-      if (!update(l)) return r;
-      if (!update(r)) return l;
-
+      if (!l) return r;
+      if (!r) return l;
       if (rand() % (size(l) + size(r)) < size(l)) {
-        auto newl = copy(l);
-        newl->right_ = merge(newl->right_, r);
+        auto newl = std::make_shared<Node>(*propagate(l));
+        newl->r = merge(l->r, r);
         return update(newl);
       } else {
-        auto newr = copy(r);
-        newr->left_ = merge(l, newr->left_);
+        auto newr = std::make_shared<Node>(*propagate(r));
+        newr->l = merge(l, r->l);
         return update(newr);
       }
     }
-    static NodePtrPair split(const NodePtr& t, Key k, const Compare& compare)
+    static NodePtrPair split(const NodePtr& t, Key k, Compare& compare)
     {
-      if (!update(t)) return std::make_pair(t, t);
-
-      auto newt = copy(t);
-      if (compare(k, newt->key_)) {
-        auto lr = split(newt->left_, k, compare);
-        newt->left_ = lr.second;
-        return std::make_pair(lr.first, update(newt));
+      if (!t) return std::make_pair(nullptr, nullptr);
+      auto newt = std::make_shared<Node>(*propagate(t));
+      if (compare(k, t->k)) {
+        auto lkr = split(t->l, k, compare);
+        newt->l = lkr.second;
+        return std::make_pair(std::move(lkr.first), std::move(update(newt)));
       } else {
-        auto lr = split(newt->right_, k, compare);
-        newt->right_ = lr.first;
-        return std::make_pair(update(newt), lr.second);
+        auto lkr = split(t->r, k, compare);
+        newt->r = lkr.first;
+        return std::make_pair(std::move(update(newt)), std::move(lkr.second));
       }
     }
     static const NodePtr& find(const NodePtr& t, Key k)
     {
-      if (!update(t)) return t;
-
-      if (k < t->key_) return find(t->left_, k);
-      if (k > t->key_) return find(t->right_, k);
+      if (!t) return t;
+      if (k < t->k) return find(t->l, k);
+      if (k > t->k) return find(t->r, k);
       return t;
     }
-public:
-    Key key() { return key_; }
-    Value value() { return value_; }
   };
   NodePtr root;
   Compare less_equal = std::less_equal<Key>();
@@ -93,16 +87,16 @@ public:
   ~RBST() {}
   void insert(Key k, Value v)
   {
-    auto lkr = Node::split(root, k, less_equal);
-    auto kkr = Node::split(lkr.second, k, less);
+    auto lk = Node::split(root, k, less_equal).first;
+    auto kr = Node::split(root, k, less).second;
     auto t = std::make_shared<Node>(k, v);
-    root = Node::merge(lkr.first, Node::merge(t, kkr.second));
+    root = Node::merge(lk, Node::merge(t, kr));
   }
   void erase(Key k)
   {
-    auto lkr = Node::split(root, k, less_equal);
-    auto kkr = Node::split(lkr.second, k, less);
-    root = Node::merge(lkr.first, kkr.second);
+    auto lk = Node::split(root, k, less_equal).first;
+    auto kr = Node::split(root, k, less).second;
+    root = Node::merge(lk, kr);
   }
   const NodePtr& find(Key k)
   {
