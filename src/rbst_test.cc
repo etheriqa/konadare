@@ -3,7 +3,7 @@
 
 #include <set>
 
-TEST(RBST, Basic)
+TEST(RBST, Small)
 {
   RBST<int> rbst;
   EXPECT_EQ(0, rbst.count(0));
