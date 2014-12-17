@@ -6,7 +6,7 @@ GTEST_SRCS = $(GTEST_DIR)/src/*.cc \
              $(GTEST_HEADERS)
 
 CPPFLAGS += -I$(GTEST_DIR)/include
-CXXFLAGS += -std=c++11 -pthread
+CXXFLAGS += -std=c++11 -pthread -O2
 
 .PHONY: all universal vimcoder test clean distclean
 
