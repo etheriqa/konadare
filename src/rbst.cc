@@ -93,16 +93,16 @@ public:
   ~RBST() {}
   void insert(Key k, Value v)
   {
-    auto lr = Node::split(root, k, less_equal);
-    auto r = Node::split(lr.second, k, less).second;
+    auto lkr = Node::split(root, k, less_equal);
+    auto kkr = Node::split(lkr.second, k, less);
     auto t = std::make_shared<Node>(k, v);
-    root = Node::merge(lr.first, Node::merge(t, r));
+    root = Node::merge(lkr.first, Node::merge(t, kkr.second));
   }
   void erase(Key k)
   {
-    auto lr = Node::split(root, k, less_equal);
-    auto r = Node::split(lr.second, k, less).second;
-    root = Node::merge(lr.first, r);
+    auto lkr = Node::split(root, k, less_equal);
+    auto kkr = Node::split(lkr.second, k, less);
+    root = Node::merge(lkr.first, kkr.second);
   }
   const NodePtr& find(Key k)
   {
