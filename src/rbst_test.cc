@@ -1,8 +1,6 @@
 #include "gtest/gtest.h"
 #include "rbst.cc"
 
-#include <set>
-
 TEST(RBST, Small)
 {
   RBST<int> rbst;
@@ -25,10 +23,10 @@ TEST(RBST, Small)
 TEST(RBST, Large)
 {
   RBST<int> rbst;
-  for (int i = 0; i < 1e3; i++) {
+  for (int i = 0; i < 1e6; i++) {
     rbst.insert(i);
   }
-  for (int i = 0; i < 1e3; i++) {
+  for (int i = 0; i < 1e6; i++) {
     EXPECT_EQ(1, rbst.count(i));
   }
 }

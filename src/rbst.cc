@@ -15,7 +15,7 @@ class RBST
     std::shared_ptr<Node> left;
     std::shared_ptr<Node> right;
     Node(Key k) :key(k) {}
-    static std::shared_ptr<Node> merge(std::shared_ptr<Node> l, std::shared_ptr<Node> r)
+    static const std::shared_ptr<Node>& merge(const std::shared_ptr<Node>& l, const std::shared_ptr<Node>& r)
     {
       if (!l) return r;
       if (!r) return l;
@@ -28,7 +28,7 @@ class RBST
         return update(r);
       }
     }
-    static std::pair<std::shared_ptr<Node>, std::shared_ptr<Node>> split(std::shared_ptr<Node> t, Key k, std::function<bool(Key, Key)> compare)
+    static std::pair<std::shared_ptr<Node>, std::shared_ptr<Node>> split(const std::shared_ptr<Node>& t, Key k, const std::function<bool(Key, Key)>& compare)
     {
       if (!t) return std::make_pair(nullptr, nullptr);
 
@@ -42,14 +42,14 @@ class RBST
         return std::make_pair(update(t), lr.second);
       }
     }
-    static std::shared_ptr<Node> update(std::shared_ptr<Node> t)
+    static const std::shared_ptr<Node>& update(const std::shared_ptr<Node>& t)
     {
       t->n_nodes = 1;
       if (t->left) t->n_nodes += t->left->n_nodes;
       if (t->right) t->n_nodes += t->right->n_nodes;
       return t;
     }
-    static size_t count(std::shared_ptr<Node> t, Key k)
+    static size_t count(const std::shared_ptr<Node>& t, Key k)
     {
       if (!t) return 0;
 
