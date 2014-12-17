@@ -1,7 +1,7 @@
 #include "gtest/gtest.h"
 #include "fenwick_tree.cc"
 
-TEST(FenwickTree, Basic)
+TEST(FenwickTree, Small)
 {
   const size_t n = 10;
   FenwickTree<int> ft(n);

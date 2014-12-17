@@ -2,7 +2,7 @@
 #include "gtest/gtest.h"
 #include "union_find.cc"
 
-TEST(UnionFind, Basic)
+TEST(UnionFind, Small)
 {
   UnionFind<int> uf;
   for (int i = 0; i < 10; i++) {

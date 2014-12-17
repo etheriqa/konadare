@@ -3,7 +3,7 @@
 #include "gtest/gtest.h"
 #include "bfs.cc"
 
-TEST(BFS, Basic)
+TEST(BFS, Small)
 {
   std::map<int, std::vector<int>> es = {
     {1, {2, 3, 5, 7, 9}},
