@@ -12,7 +12,7 @@ public:
       ft[pos] += x;
     }
   }
-  Arithmetic prefix(size_t n)
+  Arithmetic prefix(size_t n) const
   {
     Arithmetic p = decltype(p)();
     for (size_t pos = n - 1; pos < ft.size(); pos = ((pos + 1) & pos) - 1) {
@@ -20,7 +20,7 @@ public:
     }
     return p;
   }
-  Arithmetic sum(size_t pos, size_t n)
+  Arithmetic sum(size_t pos, size_t n) const
   {
     return prefix(pos + n) - prefix(pos);
   }
