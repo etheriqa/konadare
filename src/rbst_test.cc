@@ -16,7 +16,7 @@ TEST(RBST, Small)
 TEST(RBST, Large)
 {
   const size_t N = 1e6;
-  RBST<int> rbst(1e8);
+  RBST<int> rbst(0x2000000);
   EXPECT_EQ(0, rbst.size());
   for (int i = 0; i < N; i++) {
     rbst.push_back(i);
