@@ -3,54 +3,26 @@
 
 TEST(RBST, Small)
 {
-  RBST<int, int> rbst;
-  EXPECT_EQ(nullptr, rbst.find(0));
-  EXPECT_EQ(nullptr, rbst.find(1));
-  EXPECT_EQ(nullptr, rbst.find(2));
-
-  rbst.insert(1, 100);
-  EXPECT_EQ(nullptr, rbst.find(0));
-  EXPECT_EQ(100, rbst.find(1)->value());
-  EXPECT_EQ(nullptr, rbst.find(2));
-
-  rbst.insert(1, 200);
-  EXPECT_EQ(nullptr, rbst.find(0));
-  EXPECT_EQ(200, rbst.find(1)->value());
-  EXPECT_EQ(nullptr, rbst.find(2));
-
-  rbst.insert(2, 400);
-  EXPECT_EQ(nullptr, rbst.find(0));
-  EXPECT_EQ(200, rbst.find(1)->value());
-  EXPECT_EQ(400, rbst.find(2)->value());
-
-  rbst.erase(1);
-  EXPECT_EQ(nullptr, rbst.find(0));
-  EXPECT_EQ(nullptr, rbst.find(1));
-  EXPECT_EQ(400, rbst.find(2)->value());
-
-  rbst.erase(0);
-  EXPECT_EQ(nullptr, rbst.find(0));
-  EXPECT_EQ(nullptr, rbst.find(1));
-  EXPECT_EQ(400, rbst.find(2)->value());
+  RBST<int> rbst;
+  EXPECT_EQ(0, rbst.size());
+  rbst.push_back(1);
+  EXPECT_EQ(1, rbst.size());
+  EXPECT_EQ(1, rbst.at(0));
+  rbst.push_back(2);
+  EXPECT_EQ(2, rbst.size());
+  EXPECT_EQ(2, rbst.at(1));
 }
 
 TEST(RBST, Large)
 {
-  const int N = 1e5;
-  RBST<int, int> rbst;
+  const int N = 1e6;
+  RBST<int> rbst;
+  EXPECT_EQ(0, rbst.size());
   for (int i = 0; i < N; i++) {
-    EXPECT_EQ(nullptr, rbst.find(i));
+    rbst.push_back(i);
   }
+  EXPECT_EQ(N, rbst.size());
   for (int i = 0; i < N; i++) {
-    rbst.insert(i, i);
-  }
-  for (int i = 0; i < N; i++) {
-    EXPECT_EQ(i, rbst.find(i)->value());
-  }
-  for (int i = 0; i < N; i++) {
-    rbst.erase(i);
-  }
-  for (int i = 0; i < N; i++) {
-    EXPECT_EQ(nullptr, rbst.find(i));
+    EXPECT_EQ(i, rbst.at(i));
   }
 }
