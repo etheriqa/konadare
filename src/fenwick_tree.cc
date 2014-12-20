@@ -1,3 +1,7 @@
+/**
+ * Fenwick tree (Binary indexed tree)
+ */
+
 #include <vector>
 
 template <class Arithmetic>

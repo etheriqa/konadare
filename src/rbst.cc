@@ -1,3 +1,7 @@
+/**
+ * Persistent randomized binary search tree (with lazy propagation)
+ */
+
 #include <random>
 #include <utility>
 

@@ -1,3 +1,7 @@
+/**
+ * Breadth-first search
+ */
+
 #include <functional>
 #include <queue>
 #include <set>

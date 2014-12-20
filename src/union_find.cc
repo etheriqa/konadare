@@ -1,3 +1,7 @@
+/**
+ * Union-Find
+ */
+
 #include <map>
 #include <utility>
 

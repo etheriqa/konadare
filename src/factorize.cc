@@ -1,3 +1,7 @@
+/**
+ * Prime factorization
+ */
+
 #include <cmath>
 #include <map>
 
