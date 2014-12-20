@@ -49,7 +49,7 @@ private:
     for (size_t i = 0; i < xs.size(); i++) xs[i] = at(root_, i);
     pool_offset_ = 0;
     root_ = nullptr;
-    for (size_t i = 0; i < xs.size(); i++) push_back(xs[i]);
+    for (size_t i = 0; i < xs.size(); i++) root_ = merge(root_, node(xs[i]));
   }
   size_type size(const NodePtr& x) const { return x ? x->size_ : 0; }
   T at(const NodePtr& x, size_type pos)
