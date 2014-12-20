@@ -44,7 +44,7 @@ private:
   }
   void gc()
   {
-    if (pool_offset_ < pool_size_ / 2) return;
+    if (pool_offset_ * 16 < pool_size_ * 15) return;
     std::vector<T> xs(size(root_));
     for (size_t i = 0; i < xs.size(); i++) xs[i] = at(root_, i);
     pool_offset_ = 0;
