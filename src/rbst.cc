@@ -15,32 +15,95 @@ class RBST
 
   struct Node
   {
-    size_type size_;
-    T value_;
-    NodePtr left_;
-    NodePtr right_;
-    Node() {}
-    explicit Node(T v): size_(1), value_(v), left_(nullptr), right_(nullptr) {}
-    Node(const Node& r): size_(r.size_), value_(r.value_), left_(r.left_), right_(r.right_) {}
+    const size_type size_;
+    const T value_;
+    const T lazy_;
+    const NodePtr left_;
+    const NodePtr right_;
+    Node(): size_(0), value_(T()), lazy_(T()), left_(nullptr), right_(nullptr) {}
+    explicit Node(T value):
+      size_(1),
+      value_(value),
+      lazy_(T()),
+      left_(nullptr),
+      right_(nullptr) {}
+    Node(T value, T lazy, NodePtr left, NodePtr right):
+      size_(1 + size(left) + size(right)),
+      value_(value),
+      lazy_(lazy),
+      left_(left),
+      right_(right) {}
   };
 
-  size_type pool_size_;
+  const size_type pool_size_;
+  const NodePtr pool_;
   size_type pool_offset_;
-  NodePtr pool_;
   NodePtr root_;
   std::default_random_engine engine_;
 public:
   explicit RBST(size_type pool_size):
     pool_size_(pool_size),
-    pool_offset_(0),
     pool_(new Node[pool_size]),
+    pool_offset_(0),
     root_(nullptr),
     engine_(std::random_device()()) {}
   ~RBST() { delete[] pool_; }
   size_type size() const { return size(root_); }
-  T at(size_type pos) { return at(root_, pos); }
-  void push_back(T v) { gc(); root_ = merge(root_, node(v)); }
+  T at(size_type pos)
+  {
+    gc();
+    return at(root_, pos);
+  }
+  void push_back(T value) {
+    gc();
+    root_ = merge(root_, node(value));
+  }
 private:
+  static size_type size(NodePtr x) { return x ? x->size_ : 0; }
+  static T value(NodePtr x) { return x ? x->value_ + x->lazy_ : T(); }
+  NodePtr propagate(NodePtr x)
+  {
+    if (!x) return x;
+    if (x->lazy_ == T()) return x;
+    return node(
+      value(x),
+      T(),
+      x->left_ ? node(x->left_->value_, x->left_->lazy_ + x->lazy_, x->left_->left_, x->left_->right_) : nullptr,
+      x->right_ ? node(x->right_->value_, x->right_->lazy_ + x->lazy_, x->right_->left_, x->right_->right_) : nullptr
+    );
+  }
+  T at(NodePtr x, size_type pos)
+  {
+    if (pos >= size(x)) return T();
+    if (pos == size(x->left_)) return value(x);
+    return pos < size(x->left_)
+      ? x->lazy_ * size(x->left_) + at(x->left_, pos)
+      : x->lazy_ * size(x->right_) + at(x->right_, pos - size(x->left_) - 1);
+  }
+  NodePtr merge(NodePtr x, NodePtr y)
+  {
+    x = propagate(x);
+    y = propagate(y);
+    if (!x) return y;
+    if (!y) return x;
+    return engine_() % (size(x) + size(y)) < size(x)
+      ? node(x->value_, x->lazy_, x->left_, merge(x->right_, y))
+      : node(y->value_, y->lazy_, merge(x, y->left_), y->right_);
+  }
+  NodePtrPair split(NodePtr x, size_type pos)
+  {
+    x = propagate(x);
+    if (!x) return std::make_pair(nullptr, nullptr);
+    if (pos == 0) return std::make_pair(nullptr, x);
+    if (pos >= size(x)) return std::make_pair(x, nullptr);
+    if (pos <= size(x->left_)) {
+      NodePtrPair xl = split(x->left_, pos);
+      return std::make_pair(xl.first, node(x->value_, x->lazy_, xl.second, x->right_));
+    } else {
+      NodePtrPair xr = split(x->right_, pos - size(x->left_) - 1);
+      return std::make_pair(node(x->value_, x->lazy_, x->left_, xr.first), xr.second);
+    }
+  }
   template <class... Args>
   NodePtr node(const Args&... args)
   {
@@ -54,65 +117,5 @@ private:
     pool_offset_ = 0;
     root_ = nullptr;
     for (size_t i = 0; i < xs.size(); i++) root_ = merge(root_, node(xs[i]));
-  }
-  size_type size(const NodePtr& x) const { return x ? x->size_ : 0; }
-  T at(const NodePtr& x, size_type pos)
-  {
-    propagate(x);
-    if (pos >= size(x)) return T();
-    if (pos == size(x->left_)) return x->value_;
-    return pos < size(x->left_)
-      ? at(x->left_, pos)
-      : at(x->right_, pos - size(x->left_) - 1);
-  }
-  const NodePtr& update(const NodePtr& x) const
-  {
-    if (!x) return x;
-    x->size_ = 1 + size(x->left_) + size(x->right_);
-    return x;
-  }
-  const NodePtr& propagate(const NodePtr& x)
-  {
-    if (!x) return x;
-    if (true) return x;
-    if (x->left_) {
-      x->left_ = node(*x->left_);
-      update(x->left_);
-    }
-    if (x->right_) {
-      x->right_ = node(*x->right_);
-      update(x->right_);
-    }
-    return update(x);
-  }
-  NodePtr merge(const NodePtr& x, const NodePtr& y)
-  {
-    if (!propagate(x)) return y;
-    if (!propagate(y)) return x;
-    if (engine_() % (size(x) + size(y)) < size(x)) {
-      NodePtr newx = node(*x);
-      newx->right_ = merge(x->right_, y);
-      return update(newx);
-    } else {
-      NodePtr newy = node(*y);
-      newy->left_ = merge(x, y->left_);
-      return update(newy);
-    }
-  }
-  NodePtrPair split(const NodePtr& x, size_type pos)
-  {
-    if (!propagate(x)) return std::make_pair(nullptr, nullptr);
-    if (pos == 0) return std::make_pair(nullptr, x);
-    if (pos >= size(x)) return std::make_pair(x, nullptr);
-    NodePtr newx = node(*x);
-    if (pos <= size(x->left_)) {
-      NodePtrPair xl = split(x->left_, pos);
-      newx->left_ = xl.second;
-      return std::make_pair(xl.first, update(newx));
-    } else {
-      NodePtrPair xr = split(x->right_, pos - size(x->left_) - 1);
-      newx->right_ = xr.first;
-      return std::make_pair(update(newx), xr.second);
-    }
   }
 };
