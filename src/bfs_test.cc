@@ -18,15 +18,21 @@ TEST(BFS, Small)
     {10, {5}}
   };
 
-  std::vector<int> visited;
-
-  bfs<int>(
+  auto pred = bfs<int>(
     1,
     [&](int v){
-      visited.push_back(v);
       return es[v];
     }
   );
 
-  EXPECT_EQ(std::vector<int>({1, 2, 3, 5, 7, 9, 4, 6, 10, 8}), visited);
+  EXPECT_EQ(1, pred[1]);
+  EXPECT_EQ(1, pred[2]);
+  EXPECT_EQ(1, pred[3]);
+  EXPECT_EQ(2, pred[4]);
+  EXPECT_EQ(1, pred[5]);
+  EXPECT_EQ(3, pred[6]);
+  EXPECT_EQ(1, pred[7]);
+  EXPECT_EQ(4, pred[8]);
+  EXPECT_EQ(1, pred[9]);
+  EXPECT_EQ(5, pred[10]);
 }

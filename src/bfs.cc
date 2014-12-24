@@ -4,18 +4,26 @@
 
 #include <functional>
 #include <queue>
-#include <set>
+#include <unordered_map>
+#include <utility>
 #include <vector>
 
 template <class V>
-void bfs(V s, std::function<std::vector<V>(V)> adjs)
-{
-  std::queue<V> q;
-  std::set<V> visited;
-  for (q.push(s); !q.empty(); q.pop()) {
-    V v = q.front();
-    if (visited.count(v)) continue;
-    visited.insert(v);
-    for (V u : adjs(v)) q.push(u);
+std::unordered_map<V, V> bfs(
+    V s,
+    std::function<std::vector<V>(V)> adjs
+) {
+  std::queue<std::pair<V, V>> q;
+  std::unordered_map<V, V> pred;
+  for (q.push(std::make_pair(s, s)); !q.empty(); q.pop()) {
+    V t = q.front().first;
+    V u = q.front().second;
+    if (pred.count(u)) continue;
+    pred[u] = t;
+    for (V v : adjs(u)) {
+      if (pred.count(v)) continue;
+      q.push(std::make_pair(u, v));
+    }
   }
+  return pred;
 }
