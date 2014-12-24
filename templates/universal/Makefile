@@ -1,16 +1,17 @@
-CXX      = clang++
-CXXFLAGS = -std=c++11 -O2 -include {{CLANG_HEADER_PATH}}
 TARGET   = solver
+SRC      = solution.cc
+CXXFLAGS = -std=c++11 -g -O2 -include {{CLANG_HEADER_PATH}}
 
-.PHONY: all clean test copy
+.PHONY: test copy clean
 
-all: $(TARGET) test
+test: $(TARGET)
+	./checker.sh ./$(TARGET)
+
+$(TARGET): $(SRC)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $(TARGET) $(SRC)
+
+copy:
+	cat $(SRC) | pbcopy
 
 clean:
 	rm -f $(TARGET)
-
-test: all
-	./checker.sh ./$(TARGET)
-
-copy:
-	cat $(TARGET).cc | pbcopy

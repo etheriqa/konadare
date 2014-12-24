@@ -1,18 +1,16 @@
-CXX      = clang++
-CXXFLAGS = -std=c++11 -O2 -include {{CLANG_HEADER_PATH}}
 TARGET   = driver
+SRC      = $CLASSNAME$.cc
+CXXFLAGS = -std=c++11 -g -O2 -include {{CLANG_HEADER_PATH}}
 
-.PHONY: all clean test copy
+.PHONY: test copy clean
 
-all: $(TARGET) test
+$(TARGET): $(SRC)
 
-clean:
-	rm -f $(TARGET)
-
-test: all
+test: $(TARGET)
 	./$(TARGET)
 
 copy:
-	cat $CLASSNAME$.cc | pbcopy
+	cat $(SRC) | pbcopy
 
-$(TARGET): $CLASSNAME$.cc
+clean:
+	rm -f $(TARGET)
