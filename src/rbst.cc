@@ -77,6 +77,14 @@ public:
 private:
   static size_type size(NodePtr x) { return x ? x->size_ : 0; }
   static T value(NodePtr x) { return x ? x->value_ + x->lazy_ : T(); }
+  static T at(NodePtr x, size_type pos)
+  {
+    if (pos >= size(x)) return T();
+    if (pos == size(x->left_)) return value(x);
+    return pos < size(x->left_)
+      ? x->lazy_ + at(x->left_, pos)
+      : x->lazy_ + at(x->right_, pos - size(x->left_) - 1);
+  }
   NodePtr propagate(NodePtr x)
   {
     if (!x) return x;
@@ -99,14 +107,6 @@ private:
       );
     }
     return node(value(x), T(), left, right);
-  }
-  T at(NodePtr x, size_type pos)
-  {
-    if (pos >= size(x)) return T();
-    if (pos == size(x->left_)) return value(x);
-    return pos < size(x->left_)
-      ? x->lazy_ + at(x->left_, pos)
-      : x->lazy_ + at(x->right_, pos - size(x->left_) - 1);
   }
   NodePtr merge(NodePtr x, NodePtr y)
   {
