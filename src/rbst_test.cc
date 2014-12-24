@@ -54,26 +54,4 @@ TEST(RBST, Large)
       break;
     }
   }
-
-  /*
-  while (in >> query) {
-    if (query == "push_back") {
-      long long v;
-      in >> v;
-      rbst.push_back(v);
-      vec.push_back(v);
-    }
-    if (query == "at") {
-    }
-    if (query == "add") {
-      size_t pos, n;
-      long long v;
-      in >> pos >> n >> v;
-      rbst.add(pos, n, v);
-      for (size_t i = 0; i < n; i++) {
-        vec[pos + i] += v;
-      }
-    }
-  }
-  */
 }
