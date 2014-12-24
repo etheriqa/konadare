@@ -17,10 +17,12 @@ std::unordered_map<V, V> dijkstra(
   using item_t = std::tuple<W, V, V>;
   std::priority_queue<item_t, std::vector<item_t>, std::greater<item_t>> pq;
   std::unordered_map<V, V> pred;
-  for (pq.push(std::make_tuple(W(), s, s)); !pq.empty(); pq.pop()) {
+  pq.push(std::make_tuple(W(), s, s));
+  while (!pq.empty()) {
     W w = std::get<0>(pq.top());
     V t = std::get<1>(pq.top());
     V u = std::get<2>(pq.top());
+    pq.pop();
     if (pred.count(u)) continue;
     pred[u] = t;
     for (V v : adjs(u)) {

@@ -1,30 +1,30 @@
 /**
- * Breadth-first search
+ * Depth-first search
  */
 
 #include <functional>
-#include <queue>
+#include <stack>
 #include <unordered_map>
 #include <utility>
 #include <vector>
 
 template <class V>
-std::unordered_map<V, V> bfs(
+std::unordered_map<V, V> dfs(
     V s,
     std::function<std::vector<V>(V)> adjs
 ) {
-  std::queue<std::pair<V, V>> que;
+  std::stack<std::pair<V, V>> sta;
   std::unordered_map<V, V> pred;
-  que.push(std::make_pair(s, s));
-  while (!que.empty()) {
-    V t = que.front().first;
-    V u = que.front().second;
-    que.pop();
+  sta.push(std::make_pair(s, s));
+  while (!sta.empty()) {
+    V t = sta.top().first;
+    V u = sta.top().second;
+    sta.pop();
     if (pred.count(u)) continue;
     pred[u] = t;
     for (V v : adjs(u)) {
       if (pred.count(v)) continue;
-      que.push(std::make_pair(u, v));
+      sta.push(std::make_pair(u, v));
     }
   }
   return pred;
