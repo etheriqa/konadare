@@ -58,6 +58,22 @@ public:
     gc();
     root_ = merge(root_, node(value));
   }
+  void add(size_type pos, size_type n, T value)
+  {
+    gc();
+    NodePtrPair p1 = split(root_, pos);
+    NodePtrPair p2 = split(p1.second, n);
+    NodePtr target = nullptr;
+    if (p2.first) {
+      target = node(
+        p2.first->value_,
+        p2.first->lazy_ + value,
+        p2.first->left_,
+        p2.first->right_
+      );
+    }
+    root_ = merge(p1.first, merge(target, p2.second));
+  }
 private:
   static size_type size(NodePtr x) { return x ? x->size_ : 0; }
   static T value(NodePtr x) { return x ? x->value_ + x->lazy_ : T(); }
@@ -65,20 +81,32 @@ private:
   {
     if (!x) return x;
     if (x->lazy_ == T()) return x;
-    return node(
-      value(x),
-      T(),
-      x->left_ ? node(x->left_->value_, x->left_->lazy_ + x->lazy_, x->left_->left_, x->left_->right_) : nullptr,
-      x->right_ ? node(x->right_->value_, x->right_->lazy_ + x->lazy_, x->right_->left_, x->right_->right_) : nullptr
-    );
+    NodePtr left = nullptr, right = nullptr;
+    if (x->left_) {
+      left = node(
+        x->left_->value_,
+        x->left_->lazy_ + x->lazy_,
+        x->left_->left_,
+        x->left_->right_
+      );
+    }
+    if (x->right_) {
+      right = node(
+        x->right_->value_,
+        x->right_->lazy_ + x->lazy_,
+        x->right_->left_,
+        x->right_->right_
+      );
+    }
+    return node(value(x), T(), left, right);
   }
   T at(NodePtr x, size_type pos)
   {
     if (pos >= size(x)) return T();
     if (pos == size(x->left_)) return value(x);
     return pos < size(x->left_)
-      ? x->lazy_ * size(x->left_) + at(x->left_, pos)
-      : x->lazy_ * size(x->right_) + at(x->right_, pos - size(x->left_) - 1);
+      ? x->lazy_ + at(x->left_, pos)
+      : x->lazy_ + at(x->right_, pos - size(x->left_) - 1);
   }
   NodePtr merge(NodePtr x, NodePtr y)
   {
