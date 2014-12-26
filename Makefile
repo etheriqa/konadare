@@ -1,65 +1,55 @@
-GTEST_DIR = vendor/gtest-1.7.0
-GTEST_HEADERS = $(GTEST_DIR)/include/gtest/*.h \
-                $(GTEST_DIR)/include/gtest/internal/*.h
-GTEST_SRCS = $(GTEST_DIR)/src/*.cc \
-             $(GTEST_DIR)/src/*.h \
-             $(GTEST_HEADERS)
+GTEST_DIR = vendor/gtest-1.7.0/fused-src
+GTEST_SRCS = $(GTEST_DIR)/gtest/gtest-all.cc \
+	     $(GTEST_DIR)/gtest/gtest_main.cc
+GTEST_HEADS = $(GTEST_DIR)/gtest/gtest.h
 
-CPPFLAGS += -I$(GTEST_DIR)/include
-CXXFLAGS += -std=c++11 -pthread -O2
+SRC_DIR = src
+DEPEND = Makefile.depends
 
-.PHONY: all universal vimcoder test clean distclean
+SRCS = $(GTEST_SRCS) \
+       $(shell find $(SRC_DIR) -name '*_test.cc')
+HEADS = $(GTEST_HEADS)
+OBJS = $(SRCS:.cc=.o)
 
-all: universal vimcoder
+CPPFLAGS += -I$(GTEST_DIR) -I$(SRC_DIR)
+CXXFLAGS += -std=c++11 -g -pthread -O2
 
-universal:
-	mkdir -p dist/universal
-	sed s@{{CLANG_HEADER_PATH}}@$(PWD)/dist/universal/clang++.h@ templates/universal/Makefile > dist/universal/Makefile
-	cat templates/header.cc templates/universal/solution.cc > dist/universal/solution.cc
-	cp templates/universal/checker.sh dist/universal/
-	cp templates/clang++.h dist/universal/
+.PHONY: all test depend clean
 
-vimcoder:
-	mkdir -p dist/vimcoder
-	sed s@{{CLANG_HEADER_PATH}}@$(PWD)/dist/vimcoder/clang++.h@ templates/vimcoder/Makefile > dist/vimcoder/C++Makefile
-	cat templates/header.cc templates/vimcoder/solution.cc > dist/vimcoder/C++Template
-	cp templates/clang++.h dist/vimcoder/
+all: dist/universal dist/vimcoder
 
-build/gtest-all.o: $(GTEST_SRCS)
-	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -I$(GTEST_DIR) -c $(GTEST_DIR)/src/gtest-all.cc -o $@
+dist/universal: templates/header.cc templates/clang++.h $(shell find templates/universal/**)
+	rm -fr $@
+	mkdir -p $@
+	sed s@{{CLANG_HEADER_PATH}}@$(PWD)/dist/universal/clang++.h@ templates/universal/Makefile > $@/Makefile
+	cat templates/header.cc templates/universal/solution.cc > $@/solution.cc
+	cp templates/universal/checker.sh $@
+	cp templates/clang++.h $@
 
-build/gtest_main.o: $(GTEST_SRCS)
-	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -I$(GTEST_DIR) -c $(GTEST_DIR)/src/gtest_main.cc -o $@
+dist/vimcoder: templates/header.cc templates/clang++.h $(shell find templates/vimcoder/**)
+	rm -fr $@
+	mkdir -p $@
+	sed s@{{CLANG_HEADER_PATH}}@$(PWD)/dist/vimcoder/clang++.h@ templates/vimcoder/Makefile > $@/C++Makefile
+	cat templates/header.cc templates/vimcoder/solution.cc > $@/C++Template
+	cp templates/clang++.h $@
 
-build/gtest_main.a: build/gtest-all.o build/gtest_main.o
-	$(AR) $(ARFLAGS) $@ $^
+dist/%: dist/universal
+	rm -fr $@
+	cp -r dist/universal $@
 
-build/%_test.o: src/%.cc src/%_test.cc $(GTEST_HEADERS)
-	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $(patsubst build/%.o,src/%.cc,$@) -o $@
+depend:
+	$(CXX) $(CPPFLAGS) -MM $(SRCS) | tee $(DEPEND)
 
-build/%_test: build/%_test.o build/gtest_main.a
-	$(CXX) $(CXXFLAGS) $(CPPFLAGS) $^ -o $@
+build/test: $(HEADS) $(OBJS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(OBJS) -o $@
 
-build/test-all: $(patsubst src/%.cc,build/%.o,$(wildcard src/*_test.cc)) build/gtest_main.a
-	$(CXX) $(CXXFLAGS) $(CPPFLAGS) $^ -o $@
-
-%_test: build/%_test
+test:
+	make build/$@
 	./build/$@
 
-test: build/test-all
-	./build/test-all
-
 clean:
-	rm -rf build/*
-	rm -rf dist/*
-	rm -f *.a
-	rm -f *.o
-	rm -f **/*.a
-	rm -f **/*.o
+	rm -f $(OBJS)
+	rm -fr build/*
+	rm -fr dist/*
 
-distclean: clean
-	rm -rf vendor/*
-
-.DEFAULT:
-	rm -rf dist/$@
-	cp -r dist/universal dist/$@
+-include $(DEPEND)
