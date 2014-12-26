@@ -1,5 +1,6 @@
 *.o
 Makefile.depends
 test
+/build
 /dist
 /vendor

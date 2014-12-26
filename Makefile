@@ -1,15 +1,13 @@
-GTEST_DIR = vendor/gtest-1.7.0/fused-src
-GTEST_SRCS = $(GTEST_DIR)/gtest/gtest-all.cc \
-	     $(GTEST_DIR)/gtest/gtest_main.cc
-GTEST_HEADS = $(GTEST_DIR)/gtest/gtest.h
-
 SRC_DIR = src
 DEPEND = Makefile.depends
 
-SRCS = $(GTEST_SRCS) \
-       $(shell find $(SRC_DIR) -name '*_test.cc')
-HEADS = $(GTEST_HEADS)
+SRCS = $(shell find $(SRC_DIR) -name '*_test.cc')
 OBJS = $(SRCS:.cc=.o)
+
+GTEST_DIR = vendor/gtest-1.7.0/fused-src
+GTEST_SRCS = $(GTEST_DIR)/gtest/gtest-all.cc \
+	     $(GTEST_DIR)/gtest/gtest_main.cc
+GTEST_OBJS = $(GTEST_SRCS:.cc=.o)
 
 CPPFLAGS += -I$(GTEST_DIR) -I$(SRC_DIR)
 CXXFLAGS += -std=c++11 -g -pthread -O2
@@ -41,15 +39,24 @@ depend:
 	cat /dev/null > $(DEPEND)
 	$(foreach src,$(SRCS),$(CXX) $(CPPFLAGS) -MM -MT $(src:.cc=.o) $(src) >> $(DEPEND);)
 
-build/test: $(HEADS) $(OBJS)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(OBJS) -o $@
+build/test: $(OBJS) $(GTEST_OBJS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $^ -o $@
+
+build/%_test: $(SRC_DIR)/%_test.o $(GTEST_OBJS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $^ -o $@
 
 test:
 	make build/$@
 	./build/$@
 
+%_test:
+	[ -f $(SRC_DIR)/$@.cc ]
+	make build/$@
+	./build/$@
+
 clean:
 	rm -f $(OBJS)
+	rm -f $(GTEST_OBJS)
 	rm -fr build/*
 	rm -fr dist/*
 
