@@ -38,7 +38,8 @@ dist/%: dist/universal
 	cp -r dist/universal $@
 
 depend:
-	$(CXX) $(CPPFLAGS) -MM $(SRCS) | tee $(DEPEND)
+	cat /dev/null > $(DEPEND)
+	$(foreach src,$(SRCS),$(CXX) $(CPPFLAGS) -MM -MT $(src:.cc=.o) $(src) >> $(DEPEND);)
 
 build/test: $(HEADS) $(OBJS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(OBJS) -o $@
