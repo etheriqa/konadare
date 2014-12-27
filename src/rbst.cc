@@ -54,9 +54,17 @@ public:
     gc();
     return at(root_, pos);
   }
-  void push_back(T value) {
+  void push_back(T value)
+  {
     gc();
     root_ = merge(root_, node(value));
+  }
+  void erase(size_type pos)
+  {
+    gc();
+    NodePtrPair p1 = split(root_, pos);
+    NodePtrPair p2 = split(p1.second, 1);
+    root_ = merge(p1.first, p2.second);
   }
   void add(size_type pos, size_type n, T value)
   {

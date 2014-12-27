@@ -37,13 +37,23 @@ TEST(RBST, Large)
   }
 
   for (size_t i = 0; i < query; i++) {
-    switch (engine() % 2) {
+    switch (engine() % 4) {
     case 0:
-      pos = engine() % size;
-      EXPECT_TRUE(rbst.at(pos) == vec.at(pos));
+      value = engine() % (2 * range) - range;
+      rbst.push_back(value);
+      vec.push_back(value);
       break;
     case 1:
-      std::pair<size_t, size_t> p = std::minmax(engine() % size, engine() % size);
+      pos = engine() % vec.size();
+      rbst.erase(pos);
+      vec.erase(vec.begin() + pos);
+      break;
+    case 2:
+      pos = engine() % vec.size();
+      EXPECT_TRUE(rbst.at(pos) == vec.at(pos));
+      break;
+    case 3:
+      std::pair<size_t, size_t> p = std::minmax(engine() % vec.size(), engine() % vec.size());
       pos = p.first;
       n = p.second - p.first;
       value = engine() % (2 * range) - range;
