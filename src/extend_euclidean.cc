@@ -5,7 +5,7 @@
 #include <utility>
 
 template <class Arithmetic>
-std::pair<Arithmetic, Arithmetic> extendEuclidean(Arithmetic a, Arithmetic b)
+std::pair<Arithmetic, Arithmetic> extend_euclidean(Arithmetic a, Arithmetic b)
 {
   if (a < b) {
     auto yx = extend_euclidean(b, a);
