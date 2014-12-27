@@ -39,9 +39,10 @@ TEST(RBST, Large)
   for (size_t i = 0; i < query; i++) {
     switch (engine() % 4) {
     case 0:
+      pos = engine() % vec.size();
       value = engine() % (2 * range) - range;
-      rbst.push_back(value);
-      vec.push_back(value);
+      rbst.insert(pos, value);
+      vec.insert(vec.begin() + pos, value);
       break;
     case 1:
       pos = engine() % vec.size();

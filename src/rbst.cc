@@ -59,6 +59,12 @@ public:
     gc();
     root_ = merge(root_, node(value));
   }
+  void insert(size_type pos, T value)
+  {
+    gc();
+    NodePtrPair p = split(root_, pos);
+    root_ = merge(p.first, merge(node(value), p.second));
+  }
   void erase(size_type pos)
   {
     gc();
