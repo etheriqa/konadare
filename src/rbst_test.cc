@@ -1,6 +1,5 @@
 #include <algorithm>
 #include <random>
-#include <string>
 #include <vector>
 #include "gtest/gtest.h"
 #include "rbst.cc"
