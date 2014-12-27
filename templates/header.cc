@@ -1,7 +1,3 @@
-#if defined(__GNUG__) && !defined(__clang__)
-#include <bits/stdc++.h>
-#endif
-
 #define inf(T) (numeric_limits<T>::min())
 #define sup(T) (numeric_limits<T>::max())
 #define rep(i,n) for (int i = 0; i < (n); i++)

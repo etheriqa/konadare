@@ -16,19 +16,19 @@ CXXFLAGS += -std=c++11 -g -pthread -O2
 
 all: dist/universal dist/vimcoder
 
-dist/universal: templates/header.cc templates/clang++.h $(shell find templates/universal/**)
+dist/universal: templates/header.cc templates/g++.h templates/clang++.h $(shell find templates/universal/**)
 	rm -fr $@
 	mkdir -p $@
 	sed s@{{CLANG_HEADER_PATH}}@$(PWD)/dist/universal/clang++.h@ templates/universal/Makefile > $@/Makefile
-	cat templates/header.cc templates/universal/solution.cc > $@/solution.cc
+	cat templates/g++.h templates/header.cc templates/universal/solution.cc > $@/solution.cc
 	cp templates/universal/checker.sh $@
 	cp templates/clang++.h $@
 
-dist/vimcoder: templates/header.cc templates/clang++.h $(shell find templates/vimcoder/**)
+dist/vimcoder: templates/header.cc templates/g++.h templates/clang++.h $(shell find templates/vimcoder/**)
 	rm -fr $@
 	mkdir -p $@
 	sed s@{{CLANG_HEADER_PATH}}@$(PWD)/dist/vimcoder/clang++.h@ templates/vimcoder/Makefile > $@/C++Makefile
-	cat templates/header.cc templates/vimcoder/solution.cc > $@/C++Template
+	cat templates/g++.h templates/header.cc templates/vimcoder/solution.cc > $@/C++Template
 	cp templates/clang++.h $@
 
 dist/%: dist/universal
