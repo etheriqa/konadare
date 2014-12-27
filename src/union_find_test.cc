@@ -10,8 +10,8 @@ TEST(UnionFind, Small)
   }
   for (int i = 0; i < 10; i++) {
     for (int j = 0; j < 10; j++) {
-      if (i == j) { EXPECT_TRUE(uf.find(i) == uf.find(j)); }
-      else        { EXPECT_FALSE(uf.find(i) == uf.find(j)); }
+      if (i == j) { EXPECT_TRUE(uf.isSame(i, j)); }
+      else        { EXPECT_FALSE(uf.isSame(i, j)); }
     }
   }
 
@@ -19,18 +19,18 @@ TEST(UnionFind, Small)
   std::set<int> s0({0, 1});
   for (int i = 0; i < 10; i++) {
     for (int j = 0; j < 10; j++) {
-      if      (i == j)                     { EXPECT_TRUE(uf.find(i) == uf.find(j)); }
-      else if (s0.count(i) && s0.count(j)) { EXPECT_TRUE(uf.find(i) == uf.find(j)); }
-      else                                 { EXPECT_FALSE(uf.find(i) == uf.find(j)); }
+      if      (i == j)                     { EXPECT_TRUE(uf.isSame(i, j)); }
+      else if (s0.count(i) && s0.count(j)) { EXPECT_TRUE(uf.isSame(i, j)); }
+      else                                 { EXPECT_FALSE(uf.isSame(i, j)); }
     }
   }
 
   uf.merge(1, 0);
   for (int i = 0; i < 10; i++) {
     for (int j = 0; j < 10; j++) {
-      if      (i == j)                     { EXPECT_TRUE(uf.find(i) == uf.find(j)); }
-      else if (s0.count(i) && s0.count(j)) { EXPECT_TRUE(uf.find(i) == uf.find(j)); }
-      else                                 { EXPECT_FALSE(uf.find(i) == uf.find(j)); }
+      if      (i == j)                     { EXPECT_TRUE(uf.isSame(i, j)); }
+      else if (s0.count(i) && s0.count(j)) { EXPECT_TRUE(uf.isSame(i, j)); }
+      else                                 { EXPECT_FALSE(uf.isSame(i, j)); }
     }
   }
 
@@ -38,10 +38,10 @@ TEST(UnionFind, Small)
   std::set<int> s1({2, 3});
   for (int i = 0; i < 10; i++) {
     for (int j = 0; j < 10; j++) {
-      if      (i == j)                     { EXPECT_TRUE(uf.find(i) == uf.find(j)); }
-      else if (s0.count(i) && s0.count(j)) { EXPECT_TRUE(uf.find(i) == uf.find(j)); }
-      else if (s1.count(i) && s1.count(j)) { EXPECT_TRUE(uf.find(i) == uf.find(j)); }
-      else                                 { EXPECT_FALSE(uf.find(i) == uf.find(j)); }
+      if      (i == j)                     { EXPECT_TRUE(uf.isSame(i, j)); }
+      else if (s0.count(i) && s0.count(j)) { EXPECT_TRUE(uf.isSame(i, j)); }
+      else if (s1.count(i) && s1.count(j)) { EXPECT_TRUE(uf.isSame(i, j)); }
+      else                                 { EXPECT_FALSE(uf.isSame(i, j)); }
     }
   }
 
@@ -49,9 +49,9 @@ TEST(UnionFind, Small)
   std::set<int> s2({0, 1, 2, 3});
   for (int i = 0; i < 10; i++) {
     for (int j = 0; j < 10; j++) {
-      if      (i == j)                     { EXPECT_TRUE(uf.find(i) == uf.find(j)); }
-      else if (s2.count(i) && s2.count(j)) { EXPECT_TRUE(uf.find(i) == uf.find(j)); }
-      else                                 { EXPECT_FALSE(uf.find(i) == uf.find(j)); }
+      if      (i == j)                     { EXPECT_TRUE(uf.isSame(i, j)); }
+      else if (s2.count(i) && s2.count(j)) { EXPECT_TRUE(uf.isSame(i, j)); }
+      else                                 { EXPECT_FALSE(uf.isSame(i, j)); }
     }
   }
 
@@ -60,7 +60,7 @@ TEST(UnionFind, Small)
   }
   for (int i = 0; i < 10; i++) {
     for (int j = 0; j < 10; j++) {
-      EXPECT_TRUE(uf.find(i) == uf.find(j));
+      EXPECT_TRUE(uf.isSame(i, j));
     }
   }
 }

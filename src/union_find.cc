@@ -40,4 +40,8 @@ public:
       return px.first = find(px.first);
     }
   }
+  bool isSame(const Key& x, const Key& y)
+  {
+    return find(x) == find(y);
+  }
 };
