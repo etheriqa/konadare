@@ -38,7 +38,7 @@ dist/%: dist/universal
 
 depend:
 	cat /dev/null > $(DEPEND)
-	$(foreach src,$(SRCS),$(CXX) $(CPPFLAGS) -MM -MT $(src:.cc=.o) $(src) >> $(DEPEND);)
+	$(foreach src,$(SRCS),$(CXX) $(CPPFLAGS) $(CXXFLAGS) -MM -MT $(src:.cc=.o) $(src) >> $(DEPEND);)
 
 build/test: $(OBJS) $(GTEST_OBJS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $^ -o $@
