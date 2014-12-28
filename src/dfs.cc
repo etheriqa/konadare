@@ -10,21 +10,21 @@
 
 template <class V>
 std::unordered_map<V, V> dfs(
-    V s,
+    V start,
     std::function<std::vector<V>(V)> adjs
 ) {
-  std::stack<std::pair<V, V>> sta;
+  std::stack<std::pair<V, V>> s;
   std::unordered_map<V, V> pred;
-  sta.push(std::make_pair(s, s));
-  while (!sta.empty()) {
-    V t = sta.top().first;
-    V u = sta.top().second;
-    sta.pop();
+  s.push(std::make_pair(start, start));
+  while (!s.empty()) {
+    V t = s.top().first;
+    V u = s.top().second;
+    s.pop();
     if (pred.count(u)) continue;
     pred[u] = t;
     for (V v : adjs(u)) {
       if (pred.count(v)) continue;
-      sta.push(std::make_pair(u, v));
+      s.push(std::make_pair(u, v));
     }
   }
   return pred;
