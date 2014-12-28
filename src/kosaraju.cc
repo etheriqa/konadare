@@ -2,6 +2,7 @@
  * Kosaraju's algorithm (using an adjacency list)
  */
 
+#include <algorithm>
 #include <functional>
 #include <stack>
 #include <unordered_map>
@@ -45,7 +46,7 @@ public:
         dfs(v, edges_, pt, first);
       }
     }
-    reverse(first.begin(), first.end());
+    std::reverse(first.begin(), first.end());
     {
       PredTree pt;
       for (V v : first) {
