@@ -1,3 +1,4 @@
+#include <string>
 #include "gtest/gtest.h"
 #include "push_relabel_relabel_to_front.cc"
 
@@ -47,21 +48,21 @@ TEST(PushRelabelRelabelToFront, Small4)
 
 TEST(PushRelabelRelabelToFront, Small5)
 {
-  PushRelabel<int, int> pr;
-  pr.addVertex(0);
-  pr.addVertex(1);
-  pr.addVertex(2);
-  pr.addVertex(3);
-  pr.addVertex(4);
-  pr.addVertex(5);
-  pr.addEdge(0, 1, 16);
-  pr.addEdge(0, 2, 13);
-  pr.addEdge(1, 3, 12);
-  pr.addEdge(2, 1, 4);
-  pr.addEdge(2, 4, 14);
-  pr.addEdge(3, 2, 9);
-  pr.addEdge(3, 5, 20);
-  pr.addEdge(4, 3, 7);
-  pr.addEdge(4, 5, 4);
-  EXPECT_EQ(23, pr.findMaxFlow(0, 5));
+  PushRelabel<std::string, int> pr;
+  pr.addVertex("source");
+  pr.addVertex("1");
+  pr.addVertex("2");
+  pr.addVertex("3");
+  pr.addVertex("4");
+  pr.addVertex("sink");
+  pr.addEdge("source", "1", 16);
+  pr.addEdge("source", "2", 13);
+  pr.addEdge("1", "3", 12);
+  pr.addEdge("2", "1", 4);
+  pr.addEdge("2", "4", 14);
+  pr.addEdge("3", "2", 9);
+  pr.addEdge("3", "sink", 20);
+  pr.addEdge("4", "3", 7);
+  pr.addEdge("4", "sink", 4);
+  EXPECT_EQ(23, pr.findMaxFlow("source", "sink"));
 }
