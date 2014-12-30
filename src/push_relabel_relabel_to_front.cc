@@ -16,7 +16,6 @@ class PushRelabel
   using VertexWeakPtr = std::weak_ptr<Vertex>;
   struct Edge;
   using EdgePtr       = std::shared_ptr<Edge>;
-  using EdgeWeakPtr   = std::weak_ptr<Edge>;
 
   struct Vertex
   {
