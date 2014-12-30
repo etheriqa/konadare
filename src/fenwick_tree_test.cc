@@ -23,7 +23,7 @@ TEST(FenwickTree, Small)
   }
 }
 
-TEST(FenwickTree, Large)
+TEST(FenwickTree, LargeRandom)
 {
   const size_t size = 1e6;
   const size_t query = 1e4;

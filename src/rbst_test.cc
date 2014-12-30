@@ -16,7 +16,7 @@ TEST(RBST, Small)
   EXPECT_EQ(2, rbst.at(1));
 }
 
-TEST(RBST, Large)
+TEST(RBST, LargeRandom)
 {
   const size_t size = 1e4;
   const size_t query = 1e6;

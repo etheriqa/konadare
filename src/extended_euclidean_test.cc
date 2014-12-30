@@ -25,7 +25,7 @@ TEST(ExtendedEuclidean, Small)
   EXPECT_EQ(6, 12 * xy.first + 18 * xy.second);
 }
 
-TEST(ExtendedEuclidean, Large)
+TEST(ExtendedEuclidean, LargeRandom)
 {
   const size_t n_cases = 1e6;
   const long long supremum = 1e6;

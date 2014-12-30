@@ -30,7 +30,7 @@ TEST(Factorize, Small)
   EXPECT_EQ(factor_t({{2, 8}, {3, 4}, {5, 2}, {7, 1}}), factorize(3628800));
 }
 
-TEST(Factorize, Large)
+TEST(Factorize, LargeRandom)
 {
   const size_t query = 1e4;
   std::random_device seed;
