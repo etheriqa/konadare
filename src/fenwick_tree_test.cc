@@ -4,23 +4,37 @@
 #include "gtest/gtest.h"
 #include "fenwick_tree.cc"
 
-TEST(FenwickTree, Small)
+TEST(FenwickTree, Small1)
 {
-  const size_t n = 10;
-  FenwickTree<int> ft(n);
-  for (int i = 0; i < n; i++) {
-    ft.add(i, i);
-  }
+  FenwickTree<int> ft(1);
 
-  for (int i = 0; i <= n; i++) {
-    EXPECT_EQ(i * (i - 1) / 2, ft.prefix(i));
-  }
+  ft.add(0, 100);
+  ASSERT_EQ(0, ft.prefix(0));
+  ASSERT_EQ(100, ft.prefix(1));
+  ASSERT_EQ(0, ft.sum(0, 0));
+  ASSERT_EQ(100, ft.sum(0, 1));
 
-  for (int i = 0; i <= n; i++) {
-    for (int j = 0; i + j <= n; j++) {
-      EXPECT_EQ(j * (2 * i + j - 1) / 2, ft.sum(i, j));
-    }
-  }
+  ft.add(0, 100);
+  ASSERT_EQ(0, ft.prefix(0));
+  ASSERT_EQ(200, ft.prefix(1));
+  ASSERT_EQ(0, ft.sum(0, 0));
+  ASSERT_EQ(200, ft.sum(0, 1));
+}
+
+TEST(FenwickTree, Small2)
+{
+  FenwickTree<int> ft(2);
+
+  ft.add(0, 100);
+  ft.add(1, 200);
+  ASSERT_EQ(0, ft.prefix(0));
+  ASSERT_EQ(100, ft.prefix(1));
+  ASSERT_EQ(300, ft.prefix(2));
+  ASSERT_EQ(0, ft.sum(0, 0));
+  ASSERT_EQ(100, ft.sum(0, 1));
+  ASSERT_EQ(300, ft.sum(0, 2));
+  ASSERT_EQ(0, ft.sum(1, 0));
+  ASSERT_EQ(200, ft.sum(1, 1));
 }
 
 TEST(FenwickTree, LargeRandom)
