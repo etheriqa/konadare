@@ -12,7 +12,7 @@
 template <class V>
 class Kosaraju
 {
-  using size_type = size_t;
+  using size_type = std::size_t;
   using Vertex    = std::vector<V>;
   using Edge      = std::unordered_map<V, Vertex>;
   using PredTree  = std::unordered_map<V, V>;
