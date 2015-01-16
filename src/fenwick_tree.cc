@@ -7,12 +7,12 @@
 template <class Arithmetic>
 class FenwickTree
 {
-  std::vector<Arithmetic> ft;
+  std::vector<Arithmetic> ft_;
 public:
-  FenwickTree(size_t n) :ft(n) {}
+  FenwickTree(size_t n) :ft_(n) {}
   void add(size_t pos, Arithmetic x)
   {
-    for (; pos < ft.size(); pos |= ((pos + 1) & ~pos)) {
+    for (; pos < ft_.size(); pos |= ((pos + 1) & ~pos)) {
       ft[pos] += x;
     }
   }
