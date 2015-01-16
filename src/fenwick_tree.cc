@@ -13,14 +13,14 @@ public:
   void add(size_t pos, Arithmetic x)
   {
     for (; pos < ft_.size(); pos |= ((pos + 1) & ~pos)) {
-      ft[pos] += x;
+      ft_[pos] += x;
     }
   }
   Arithmetic prefix(size_t n) const
   {
     Arithmetic p = decltype(p)();
-    for (size_t pos = n - 1; pos < ft.size(); pos = ((pos + 1) & pos) - 1) {
-      p += ft[pos];
+    for (size_t pos = n - 1; pos < ft_.size(); pos = ((pos + 1) & pos) - 1) {
+      p += ft_[pos];
     }
     return p;
   }
