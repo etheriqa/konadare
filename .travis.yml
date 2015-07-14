@@ -12,7 +12,7 @@ addons:
       - g++-5
 install:
   - ./install-gtest.sh
-before_scripts:
+before_script:
   - if [ "$CXX" = "g++" ]; then export CXX=/usr/bin/g++-5; fi
   - if [ "$CXX" = "clang++" ]; then export CXX=/usr/bin/clang++-3.6; fi
 script: make test
