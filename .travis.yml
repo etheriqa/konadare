@@ -1,12 +1,18 @@
 language: cpp
 compiler:
-    - g++
-    - clang++
-before_install:
-    - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
-    - sudo apt-get update -qq
+    - gcc
+    - clang
+addons:
+  apt:
+    sources:
+      - llvm-toolchain-precise-3.6
+      - ubuntu-toolchain-r-test
+    packages:
+      - clang-3.6
+      - g++-5
 install:
-    - sudo apt-get install -qq g++-4.9
-    - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.9 90
-    - ./install-gtest.sh
+  - ./install-gtest.sh
+before_scripts:
+  - if [ "$CXX" = "g++" ]; then export CXX=/usr/bin/g++-5; fi
+  - if [ "$CXX" = "clang++" ]; then export CXX=/usr/bin/clang++-3.6; fi
 script: make test
